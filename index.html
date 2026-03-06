@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraftySalamander Tools</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(176, 176, 176);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: rgb(220, 220, 220);
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: rgb(0, 32, 96);
+            margin-bottom: 10px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 200px;
+            height: 200px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .tagline {
+            color: rgb(192, 0, 0);
+            font-style: italic;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-card h2 {
+            color: rgb(0, 32, 96);
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .nav-card p {
+            color: #666;
+            margin: 5px 0 0 0;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            background-color: rgb(0, 32, 96);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .footer-link {
+            color: rgb(0, 32, 96);
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="assets/salamander_sword_shield.webp" alt="CraftySalamander Logo">
+                </div>
+                <h1>CraftySalamander Tools</h1>
+                <p class="tagline">Real Time Strategy Games, LEGO...</p>
+        </header>
+
+        <nav>
+            <a href="lego_pick_a_brick.html" class="nav-card">
+                <div class="nav-icon">🧱</div>
+                <div>
+                    <h2>LEGO Pick a Brick Helper</h2>
+                    <p>Convert and update LEGO part lists for Pick a Brick orders</p>
+                </div>
+            </a>
+
+            <a href="https://rts-overlay.github.io" class="nav-card" target="_blank">
+                <div class="nav-icon">🎮</div>
+                <div>
+                    <h2>RTS Overlay</h2>
+                    <p>Tool used to design or import build orders for Real-Time Strategy (RTS) games</p>
+                </div>
+            </a>
+
+            <a href="https://craftysalamander.github.io/rtsbuilds" class="nav-card" target="_blank">
+                <div class="nav-icon">🏗️</div>
+                <div>
+                    <h2>RTS Builds</h2>
+                    <p>Collection of build orders for various Real-Time Strategy games</p>
+                </div>
+            </a>
+        </nav>
+
+        <footer>
+            <p>Created by CraftySalamander | <a href="https://github.com/CraftySalamander"
+                    class="footer-link">GitHub</a></p>
+        </footer>
+    </div>
+</body>
+
+</html>

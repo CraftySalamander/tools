@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGO Pick a Brick Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #e74c3c;
+        }
+
+        h2 {
+            color: #3498db;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        ol {
+            margin-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .widget {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .widget h2 {
+            margin-top: 0;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #conversionResults {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+        }
+
+        .conversion-line {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .link {
+            color: #2980b9;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .arrow {
+            font-size: 18px;
+            margin: 0 8px;
+        }
+
+        .note {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .summary {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // Conversion table: oldID (originalBaseId): newID (newBaseId)
+        // Note: "note" field is optional and will be displayed at the end of the line if present
+        const conversionTable = {
+            "6176296": { newId: "473326", newBaseId: "4733", originalBaseId: "4733", note: "Red to black" },
+            "6578744": { newId: "6045936", newBaseId: "11153", originalBaseId: "61678" },
+            "4619763": { newId: "6360825", newBaseId: "67696", originalBaseId: "92013" },
+            "6533790": { newId: "6092666", newBaseId: "14918", originalBaseId: "3942c" },
+        };
+    </script>
+
+    <div class="container">
+        <h1>LEGO Pick a Brick Guide</h1>
+        <ol>
+            <li>
+                Create the Pick a Brick CSV
+                <ol>
+                    <li>Go to <span class="link" data-url="https://rebrickable.com">Rebrickable</span> > Connect and go
+                        to My LEGO > <span class="link"
+                            data-url="https://rebrickable.com/users/CraftySalamander/partlists">My Part Lists</span>
+                    </li>
+                    <li>Add new Part List > Import/Delete Parts > Drag & drop the .io project > Append Parts > Close
+                    </li>
+                    <li>Click on created part list > Export Parts > LEGO Pick-A-Brick CSV</li>
+                </ol>
+            </li>
+            <li>
+                Submit on Lego Pick a Brick
+                <ol>
+                    <li>Go to <span class="link" data-url="https://www.lego.com">LEGO</span> > Shop > Bricks and pieces
+                        > <span class="link" data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a
+                            Brick</span></li>
+                    <li>Upload List > Drag & drop the .csv file</li>
+                    <li>Check unavailable pieces if any</li>
+                </ol>
+            </li>
+            <li>
+                Find updated version of unavailable pieces
+                <ol>
+                    <li>On rebrickable
+                        <ol>
+                            <li><span class="link" data-url="https://rebrickable.com/parts/">Rebrickable Parts</span>
+                            </li>
+                            <li>Enter the ID of the missing piece > Check replacement parts (bottom of the
+                                page)</li>
+                        </ol>
+                    </li>
+                    <li>On Bricklink
+                        <ol>
+                            <li><span class="link" data-url="https://www.bricklink.com">Bricklink</span></li>
+                            <li>Enter the ID of the missing piece > Check Alternate Item No (top of the page)</li>
+                        </ol>
+                    </li>
+                    <li>Check if the piece is available on Pick a Brick
+                        <ol>
+                            <li>Go to <span class="link"
+                                    data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a
+                                    Brick</span></li>
+                            <li>Enter the new ID</li>
+                        </ol>
+                    </li>
+                    <li>If no alternative was found with 1. or 2., check <span class="link"
+                            data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a Brick</span> with
+                        keywords</li>
+                </ol>
+            </li>
+        </ol>
+        <div class="widget">
+            <h2>Update CSV File</h2>
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="updateBtn">Update CSV</button>
+            <div id="conversionResults"></div>
+        </div>
+    </div>
+    <script>
+        // Function to open links in new tab without losing focus
+        function openInNewTab(url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        // Add click handlers to all link spans
+        function setupLinks() {
+            document.querySelectorAll('.link').forEach(link => {
+                link.addEventListener('click', () => {
+                    openInNewTab(link.getAttribute('data-url'));
+                });
+            });
+        }
+
+        document.getElementById('updateBtn').addEventListener('click', function () {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select a CSV file first.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const content = e.target.result;
+                const lines = content.split('\n');
+                let updatedContent = '';
+                let resultsHTML = '';
+                let totalPieces = 0;
+                let uniquePieces = 0;
+
+                // Process header line
+                updatedContent += lines[0] + '\n';
+
+                // Process data lines
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() === '') continue;
+
+                    const parts = lines[i].split(',');
+                    if (parts.length < 2) continue;
+
+                    const elementId = parts[0].trim();
+                    const quantity = parseInt(parts[1].trim());
+
+                    // Count pieces for summary
+                    totalPieces += quantity;
+                    uniquePieces++;
+
+                    if (conversionTable[elementId]) {
+                        const conv = conversionTable[elementId];
+                        // Create clickable spans for display with nice arrow
+                        let lineHTML = `<div class="conversion-line">` +
+                            `<span class="link" data-url="https://www.bricklink.com/v2/search.page?q=${elementId}">${elementId}</span> &nbsp; (` +
+                            `<span class="link" data-url="https://www.bricklink.com/v2/search.page?q=${conv.originalBaseId}">${conv.originalBaseId}</span> )` +
+                            `<span class="arrow">→</span>` +
+                            `<span class="link" data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick?query=${conv.newId}">${conv.newId}</span> &nbsp; (` +
+                            `<span class="link" data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick?query=${conv.newBaseId}">${conv.newBaseId}</span> )`;
+
+                        // Add note if present
+                        if (conv.note) {
+                            lineHTML += `<span class="note">(${conv.note})</span>`;
+                        }
+
+                        lineHTML += `</div>`;
+                        resultsHTML += lineHTML;
+
+                        // Update the CSV content
+                        updatedContent += `${conv.newId},${quantity}\n`;
+                    } else {
+                        // Keep original line if no conversion
+                        updatedContent += lines[i] + '\n';
+                    }
+                }
+
+                // Add pieces summary
+                resultsHTML = `<div class="summary">
+                    <h3>Pieces summary</h3>
+                    <p>Total unique pieces: ${uniquePieces}</p>
+                    <p>Total number of pieces: ${totalPieces}</p>
+                </div>` + resultsHTML;
+
+                // Add conversions header if there were any conversions
+                if (resultsHTML.includes('conversion-line')) {
+                    resultsHTML = resultsHTML.replace('<div class="conversion-line">', '<h3>Conversions made</h3><div class="conversion-line">');
+                }
+
+                // Display conversion results
+                document.getElementById('conversionResults').innerHTML = resultsHTML;
+
+                // Add click handlers to the new links
+                setupLinks();
+
+                // Save the updated file
+                const blob = new Blob([updatedContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'updated_' + file.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            reader.readAsText(file);
+        });
+
+        // Setup initial links
+        setupLinks();
+    </script>
+</body>
+
+</html>
