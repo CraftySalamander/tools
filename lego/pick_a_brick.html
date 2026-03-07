@@ -274,8 +274,20 @@
         }
 
         // Dictionary to map missing ElementIds
-        const missingElementIdTable = {
+        const missingElementIdDict = {
             "26601_Dark Green": "6311453",
+            "98138_Light Gray": "6284071",
+            "98138_Dark Gray": "6284596",
+            "7302_Black": "6566851",
+            "6908_Black": "6560654",
+            "553a_Dark Gray": "6475549",
+            "87081_Dark Green": "6353424",
+        };
+
+        // Dictionary to replace wrong ElementIds
+        const replaceElementIdDict = {
+            "6013802": "4243821",
+            "4107763": "4211042",
         };
 
         document.getElementById('updateBtn').addEventListener('click', function () {
@@ -326,12 +338,33 @@
                     const blItemNo = parts[0].trim();
                     const colorName = parts[6].trim();
 
+                    // Check if ElementId needs to be replaced
+                    if (elementId && replaceElementIdDict[elementId]) {
+                        const newElementId = replaceElementIdDict[elementId];
+                        updatedContent += `${newElementId},${quantity}\n`;
+                        totalPieces += quantity;
+                        uniquePieces++;
+
+                        // Add to updated lines table with the new ElementId highlighted
+                        let row = '<tr>';
+                        for (let j = 0; j < parts.length; j++) {
+                            if (j === 0 && blItemNo) {
+                                row += `<td><a href="https://rebrickable.com/parts/${blItemNo}" target="_blank">${blItemNo}</a></td>`;
+                            } else if (j === 1) {
+                                row += `<td class="updated-value"><a href="https://rebrickable.com/parts/${elementId}" target="_blank">${elementId}</a> → <a href="https://www.lego.com/fr-be/pick-and-build/pick-a-brick?query=${newElementId}" target="_blank">${newElementId}</a></td>`;
+                            } else {
+                                row += `<td>${parts[j]}</td>`;
+                            }
+                        }
+                        row += '</tr>';
+                        updatedLinesHTML += row;
+                    }
                     // Check if ElementId is missing
-                    if (!elementId && blItemNo && colorName) {
+                    else if (!elementId && blItemNo && colorName) {
                         const key = `${blItemNo}_${colorName}`;
-                        if (missingElementIdTable[key]) {
+                        if (missingElementIdDict[key]) {
                             // Use the ElementId from the table
-                            const newElementId = missingElementIdTable[key];
+                            const newElementId = missingElementIdDict[key];
                             updatedContent += `${newElementId},${quantity}\n`;
                             totalPieces += quantity;
                             uniquePieces++;
