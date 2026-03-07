@@ -130,7 +130,8 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        #skippedLines, #updatedLines {
+        #skippedLines,
+        #updatedLines {
             margin-top: 20px;
             padding: 10px;
         }
@@ -141,7 +142,8 @@
             margin-top: 10px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -337,8 +339,10 @@
                             // Add to updated lines table with the new ElementId highlighted
                             let row = '<tr>';
                             for (let j = 0; j < parts.length; j++) {
-                                if (j === 1) {
-                                    row += `<td class="updated-value">${newElementId}</td>`;
+                                if (j === 0 && blItemNo) {
+                                    row += `<td><a href="https://rebrickable.com/parts/${blItemNo}" target="_blank">${blItemNo}</a></td>`;
+                                } else if (j === 1) {
+                                    row += `<td class="updated-value"><a href="https://www.lego.com/fr-be/pick-and-build/pick-a-brick?query=${newElementId}" target="_blank">${newElementId}</a></td>`;
                                 } else {
                                     row += `<td>${parts[j]}</td>`;
                                 }
@@ -349,7 +353,13 @@
                             // Add to skipped lines table
                             let row = '<tr>';
                             for (let j = 0; j < parts.length; j++) {
-                                row += `<td>${parts[j]}</td>`;
+                                if (j === 0 && blItemNo) {
+                                    row += `<td><a href="https://rebrickable.com/parts/${blItemNo}" target="_blank">${blItemNo}</a></td>`;
+                                } else if (j === 1 && elementId) {
+                                    row += `<td><a href="https://www.lego.com/fr-be/pick-and-build/pick-a-brick?query=${elementId}" target="_blank">${elementId}</a></td>`;
+                                } else {
+                                    row += `<td>${parts[j]}</td>`;
+                                }
                             }
                             row += '</tr>';
                             skippedLinesHTML += row;
@@ -362,7 +372,13 @@
                         // Add to skipped lines table
                         let row = '<tr>';
                         for (let j = 0; j < parts.length; j++) {
-                            row += `<td>${parts[j]}</td>`;
+                            if (j === 0 && blItemNo) {
+                                row += `<td><a href="https://rebrickable.com/parts/${blItemNo}" target="_blank">${blItemNo}</a></td>`;
+                            } else if (j === 1 && elementId) {
+                                row += `<td><a href="https://www.lego.com/fr-be/pick-and-build/pick-a-brick?query=${elementId}" target="_blank">${elementId}</a></td>`;
+                            } else {
+                                row += `<td>${parts[j]}</td>`;
+                            }
                         }
                         row += '</tr>';
                         skippedLinesHTML += row;
