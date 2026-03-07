@@ -138,12 +138,25 @@
             border-radius: 5px;
         }
 
-        .skipped-line {
-            margin-bottom: 10px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
             padding: 8px;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr {
+            background-color: #f9f9f9;
         }
     </style>
 </head>
@@ -268,14 +281,30 @@
                 let skippedLinesHTML = '';
                 let totalPieces = 0;
                 let uniquePieces = 0;
+                let endOfTableReached = false;
+
+                // Parse the header line
+                const headerLine = lines[0];
+                const headers = parseCSVLine(headerLine);
 
                 // Process data lines
                 for (let i = 1; i < lines.length; i++) {
-                    if (lines[i].trim() === '') continue;
+                    const line = lines[i].trim();
+                    if (line === '') continue;
 
-                    const parts = parseCSVLine(lines[i]);
+                    // Check for end of table marker
+                    if (line === ',,,,,,,,,') {
+                        endOfTableReached = true;
+                        break;
+                    }
 
-                    if (parts.length < 9) continue;
+                    if (endOfTableReached) {
+                        break;
+                    }
+
+                    const parts = parseCSVLine(line);
+
+                    if (parts.length < headers.length) continue;
 
                     const elementId = parts[1].trim();
                     const quantity = parseInt(parts[8].trim());
@@ -285,8 +314,13 @@
                         totalPieces += quantity;
                         uniquePieces++;
                     } else {
-                        // Add to skipped lines
-                        skippedLinesHTML += `<div class="skipped-line">${lines[i]}</div>`;
+                        // Add to skipped lines table
+                        let row = '<tr>';
+                        for (let j = 0; j < parts.length; j++) {
+                            row += `<td>${parts[j]}</td>`;
+                        }
+                        row += '</tr>';
+                        skippedLinesHTML += row;
                     }
                 }
 
@@ -300,9 +334,14 @@
                 // Display conversion results
                 document.getElementById('conversionResults').innerHTML = resultsHTML;
 
-                // Display skipped lines if any
+                // Display skipped lines as a table if any
                 if (skippedLinesHTML) {
-                    document.getElementById('skippedLines').innerHTML = `<h3>Skipped Lines</h3>${skippedLinesHTML}`;
+                    let tableHTML = `<h3>Skipped Lines</h3><table><thead><tr>`;
+                    for (let i = 0; i < headers.length; i++) {
+                        tableHTML += `<th>${headers[i]}</th>`;
+                    }
+                    tableHTML += `</tr></thead><tbody>${skippedLinesHTML}</tbody></table>`;
+                    document.getElementById('skippedLines').innerHTML = tableHTML;
                 } else {
                     document.getElementById('skippedLines').innerHTML = '';
                 }
