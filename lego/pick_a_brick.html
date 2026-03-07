@@ -174,55 +174,48 @@
         <h1>LEGO Pick a Brick Guide</h1>
         <ol>
             <li>
-                Create the Pick a Brick CSV
+                <b>Create the Pick a Brick CSV</b>
                 <ol>
-                    <li>Go to <span class="link" data-url="https://rebrickable.com">Rebrickable</span> > Connect and go
-                        to My LEGO > <span class="link"
-                            data-url="https://rebrickable.com/users/CraftySalamander/partlists">My Part Lists</span>
+                    <li>In Bricklink Studio > <b>File</b> > <b>Export As</b> > <b>Export as PartsList...</b>
                     </li>
-                    <li>Add new Part List > Import/Delete Parts > Drag & drop the .io project > Append Parts > Close
+                    <li>Load the generated CSV on the bottom of this page, and click on <b>Update CSV</b>.
                     </li>
-                    <li>Click on created part list > Export Parts > LEGO Pick-A-Brick CSV</li>
+                    <li>Check the output (summary, skipped lines, updated lines).</li>
                 </ol>
             </li>
             <li>
-                Submit on Lego Pick a Brick
+                <b>Submit on Lego Pick a Brick</b>
                 <ol>
                     <li>Go to <span class="link" data-url="https://www.lego.com">LEGO</span> > Shop > Bricks and pieces
                         > <span class="link" data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a
                             Brick</span></li>
-                    <li>Upload List > Drag & drop the .csv file</li>
-                    <li>Check unavailable pieces if any</li>
+                    <li>Upload List > Drag & drop the updated .csv file.</li>
+                    <li>Check unavailable pieces if any.</li>
                 </ol>
             </li>
             <li>
-                Find updated version of unavailable pieces
+                <b>Find updated version of unavailable pieces</b>
                 <ol>
-                    <li>On rebrickable
+                    <li>On <span class="link" data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a
+                            Brick</span>
                         <ol>
-                            <li><span class="link" data-url="https://rebrickable.com/parts/">Rebrickable Parts</span>
-                            </li>
+                            <li>Check with keywords or IDs.</li>
+                        </ol>
+                    </li>
+                    <li>On <span class="link" data-url="https://rebrickable.com/parts/">Rebrickable Parts</span>
+                        <ol>
                             <li>Enter the ID of the missing piece > Check replacement parts (bottom of the
                                 page)</li>
                         </ol>
                     </li>
-                    <li>On Bricklink
+                    <li>On <span class="link" data-url="https://www.bricklink.com">Bricklink</span>
                         <ol>
-                            <li><span class="link" data-url="https://www.bricklink.com">Bricklink</span></li>
                             <li>Enter the ID of the missing piece > Check Alternate Item No (top of the page)</li>
                         </ol>
                     </li>
-                    <li>Check if the piece is available on Pick a Brick
-                        <ol>
-                            <li>Go to <span class="link"
-                                    data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a
-                                    Brick</span></li>
-                            <li>Enter the new ID</li>
-                        </ol>
+                    <li>In this script, update <i>missingElementIdDict</i> and/or <i>replaceElementIdDict</i>
+                        accordingly.
                     </li>
-                    <li>If no alternative was found with 1. or 2., check <span class="link"
-                            data-url="https://www.lego.com/fr-be/pick-and-build/pick-a-brick">Pick a Brick</span> with
-                        keywords</li>
                 </ol>
             </li>
         </ol>
@@ -236,6 +229,26 @@
         </div>
     </div>
     <script>
+        // ----- TO UPDATE ----- //
+
+        // Dictionary to map missing ElementIds as {"BLItemNo_ColorName": "ElementId"}
+        const missingElementIdDict = {
+            "26601_Dark Green": "6311453",
+            "98138_Light Gray": "6284071",
+            "98138_Dark Gray": "6284596",
+            "7302_Black": "6566851",
+            "6908_Black": "6560654",
+            "553a_Dark Gray": "6475549",
+            "87081_Dark Green": "6353424",
+        };
+
+        // Dictionary to replace wrong ElementIds as {"OldElementId": "NewElementId"}
+        const replaceElementIdDict = {
+            "6013802": "4243821",
+            "4107763": "4211042",
+        };
+        // --------------------- //
+
         // Function to open links in new tab without losing focus
         function openInNewTab(url) {
             window.open(url, '_blank', 'noopener,noreferrer');
@@ -272,23 +285,6 @@
             fields.push(currentField.trim());
             return fields;
         }
-
-        // Dictionary to map missing ElementIds
-        const missingElementIdDict = {
-            "26601_Dark Green": "6311453",
-            "98138_Light Gray": "6284071",
-            "98138_Dark Gray": "6284596",
-            "7302_Black": "6566851",
-            "6908_Black": "6560654",
-            "553a_Dark Gray": "6475549",
-            "87081_Dark Green": "6353424",
-        };
-
-        // Dictionary to replace wrong ElementIds
-        const replaceElementIdDict = {
-            "6013802": "4243821",
-            "4107763": "4211042",
-        };
 
         document.getElementById('updateBtn').addEventListener('click', function () {
             const fileInput = document.getElementById('csvFile');
