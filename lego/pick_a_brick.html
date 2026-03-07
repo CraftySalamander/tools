@@ -16,7 +16,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: auto;
             background: white;
             padding: 20px;
@@ -86,7 +86,6 @@
         #conversionResults {
             margin-top: 20px;
             padding: 10px;
-            background-color: #e8f4f8;
             border-radius: 5px;
         }
 
@@ -134,8 +133,6 @@
         #skippedLines {
             margin-top: 20px;
             padding: 10px;
-            background-color: #f8d7da;
-            border-radius: 5px;
         }
 
         table {
@@ -144,8 +141,7 @@
             margin-top: 10px;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -157,6 +153,11 @@
 
         tr {
             background-color: #f9f9f9;
+        }
+
+        /* Make every other column a bit more gray */
+        td:nth-child(odd) {
+            background-color: #e9e9e9;
         }
     </style>
 </head>
