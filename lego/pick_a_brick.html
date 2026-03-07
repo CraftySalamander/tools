@@ -130,7 +130,8 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        #skippedLines {
+        #skippedLines,
+        #updatedLines {
             margin-top: 20px;
             padding: 10px;
         }
@@ -141,7 +142,8 @@
             margin-top: 10px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -225,6 +227,7 @@
             <button id="updateBtn">Update CSV</button>
             <div id="conversionResults"></div>
             <div id="skippedLines"></div>
+            <div id="updatedLines"></div>
         </div>
     </div>
     <script>
@@ -265,6 +268,11 @@
             return fields;
         }
 
+        // Dictionary to map missing ElementIds
+        const missingElementIdTable = {
+            "26601_Dark Green": "6311453",
+        };
+
         document.getElementById('updateBtn').addEventListener('click', function () {
             const fileInput = document.getElementById('csvFile');
             const file = fileInput.files[0];
@@ -280,6 +288,7 @@
                 let updatedContent = 'elementId,quantity\n';
                 let resultsHTML = '';
                 let skippedLinesHTML = '';
+                let updatedLinesHTML = '';
                 let totalPieces = 0;
                 let uniquePieces = 0;
                 let endOfTableReached = false;
@@ -309,8 +318,36 @@
 
                     const elementId = parts[1].trim();
                     const quantity = parseInt(parts[8].trim());
+                    const blItemNo = parts[0].trim();
+                    const colorName = parts[6].trim();
 
-                    if (elementId && !isNaN(quantity)) {
+                    // Check if ElementId is missing
+                    if (!elementId && blItemNo && colorName) {
+                        const key = `${blItemNo}_${colorName}`;
+                        if (missingElementIdTable[key]) {
+                            // Use the ElementId from the table
+                            const newElementId = missingElementIdTable[key];
+                            updatedContent += `${newElementId},${quantity}\n`;
+                            totalPieces += quantity;
+                            uniquePieces++;
+
+                            // Add to updated lines table
+                            let row = '<tr>';
+                            for (let j = 0; j < parts.length; j++) {
+                                row += `<td>${parts[j]}</td>`;
+                            }
+                            row += '</tr>';
+                            updatedLinesHTML += row;
+                        } else {
+                            // Add to skipped lines table
+                            let row = '<tr>';
+                            for (let j = 0; j < parts.length; j++) {
+                                row += `<td>${parts[j]}</td>`;
+                            }
+                            row += '</tr>';
+                            skippedLinesHTML += row;
+                        }
+                    } else if (elementId && !isNaN(quantity)) {
                         updatedContent += `${elementId},${quantity}\n`;
                         totalPieces += quantity;
                         uniquePieces++;
@@ -345,6 +382,18 @@
                     document.getElementById('skippedLines').innerHTML = tableHTML;
                 } else {
                     document.getElementById('skippedLines').innerHTML = '';
+                }
+
+                // Display updated lines as a table if any
+                if (updatedLinesHTML) {
+                    let tableHTML = `<h3>Updated Lines</h3><table><thead><tr>`;
+                    for (let i = 0; i < headers.length; i++) {
+                        tableHTML += `<th>${headers[i]}</th>`;
+                    }
+                    tableHTML += `</tr></thead><tbody>${updatedLinesHTML}</tbody></table>`;
+                    document.getElementById('updatedLines').innerHTML = tableHTML;
+                } else {
+                    document.getElementById('updatedLines').innerHTML = '';
                 }
 
                 // Save the updated file
