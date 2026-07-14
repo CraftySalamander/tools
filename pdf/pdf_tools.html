@@ -643,7 +643,9 @@
                     splitFolderHandle = handle;
                     document.getElementById('split-folder-path').textContent = handle.name
                 }
-            } catch (e) { }
+            } catch (e) {
+                alert('Unable to access this folder. On Windows, system folders like Desktop, Documents, or Downloads may be restricted. Please try selecting a different folder (e.g., a subfolder within Documents or a custom folder). Files will default to your Downloads folder.');
+            }
         }
 
         const mergeDropZone = document.getElementById('merge-drop-zone'),
