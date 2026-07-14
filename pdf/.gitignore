@@ -1,0 +1,8 @@
+.idea
+*.zip
+*.build
+__pycache__
+dist
+build
+*.dist
+.vscode/*
