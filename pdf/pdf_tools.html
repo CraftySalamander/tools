@@ -416,6 +416,28 @@
             flex-shrink: 0
         }
 
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #856404;
+            font-size: .9rem;
+            margin-bottom: 20px;
+            display: none;
+            align-items: flex-start;
+            gap: 10px
+        }
+
+        .warning-box.show {
+            display: flex;
+        }
+
+        .warning-box .warning-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0
+        }
+
         .status-message {
             padding: 12px 16px;
             border-radius: 8px;
@@ -456,6 +478,37 @@
             color: #666;
             font-size: .9rem;
             margin-top: 4px
+        }
+
+        .rotate-options {
+            margin-bottom: 24px
+        }
+
+        .rotate-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all .2s ease
+        }
+
+        .rotate-option:hover {
+            border-color: #022061;
+            background: #eef2f7
+        }
+
+        .rotate-option h4 {
+            color: #022061;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-weight: 600
+        }
+
+        .rotate-option p {
+            color: #666;
+            font-size: .85rem;
+            margin-bottom: 8px
         }
 
         .footer {
@@ -515,11 +568,12 @@
 <body>
     <div class="container">
         <h1>PDF Tools</h1>
-        <p class="subtitle">Merge & Split PDFs - entirely in your browser, no upload needed</p>
+        <p class="subtitle">Merge, Split & Rotate PDFs - entirely in your browser, no upload needed</p>
         <div class="accent-bar"></div>
         <div class="tabs">
             <button class="tab active" onclick="switchTab('merge')">Merge PDFs</button>
             <button class="tab" onclick="switchTab('split')">Split PDF</button>
+            <button class="tab" onclick="switchTab('rotate')">Rotate PDF</button>
         </div>
 
         <div class="panel active" id="panel-merge">
@@ -611,11 +665,72 @@
             <div class="status-message" id="split-status"></div>
         </div>
 
+        <div class="panel" id="panel-rotate">
+            <h2>Rotate PDF</h2>
+            <p class="description">Rotate specific pages by +90°, 180°, or -90°. Pages appearing in multiple selections
+                will be ignored with a warning.</p>
+            <div class="drop-zone" id="rotate-drop-zone" onclick="document.getElementById('rotate-input').click()">
+                <div class="icon">📄</div>
+                <div class="text">Drag & drop a PDF file here or <strong>click to browse</strong></div>
+            </div>
+            <input type="file" id="rotate-input" accept=".pdf" style="display:none">
+            <div class="split-file-info" id="rotate-file-info">
+                <div class="file-name" id="rotate-file-name"></div>
+                <div class="page-count" id="rotate-page-count"></div>
+            </div>
+            <div class="info-box">
+                <span class="info-icon">ℹ️</span>
+                <span>Enter page numbers separated by commas. Use ranges with dashes. Example: <strong>1, 3,
+                        5-8</strong></span>
+            </div>
+            <div class="rotate-options">
+                <div class="rotate-option">
+                    <h4>Rotate +90° (Clockwise)</h4>
+                    <p>Pages to rotate 90 degrees clockwise</p>
+                    <input type="text" class="page-input" id="rotate-cw" placeholder="e.g. 1, 3, 5-8">
+                </div>
+                <div class="rotate-option">
+                    <h4>Rotate 180°</h4>
+                    <p>Pages to rotate 180 degrees</p>
+                    <input type="text" class="page-input" id="rotate-180" placeholder="e.g. 2, 4">
+                </div>
+                <div class="rotate-option">
+                    <h4>Rotate -90° (Counter-clockwise)</h4>
+                    <p>Pages to rotate 90 degrees counter-clockwise</p>
+                    <input type="text" class="page-input" id="rotate-ccw" placeholder="e.g. 6-10">
+                </div>
+            </div>
+            <div class="warning-box" id="rotate-warning">
+                <span class="warning-icon">⚠️</span>
+                <span id="rotate-warning-text"></span>
+            </div>
+            <div class="output-section" id="rotate-output-section">
+                <h3>Output Settings</h3>
+                <div class="output-row">
+                    <label for="rotate-output-name">File name:</label>
+                    <input type="text" id="rotate-output-name" value="rotated.pdf">
+                </div>
+                <div class="output-row">
+                    <label>Save to:</label>
+                    <div class="folder-display">
+                        <span class="folder-path" id="rotate-folder-path">Downloads (default)</span>
+                    </div>
+                    <button class="btn-folder" onclick="selectFolder('rotate')">Choose</button>
+                </div>
+            </div>
+            <div class="actions-bar">
+                <button class="btn-primary" id="rotate-btn" onclick="rotatePDF()" disabled>Rotate PDF</button>
+                <button class="btn-secondary" onclick="clearRotate()">Clear</button>
+            </div>
+            <div class="status-message" id="rotate-status"></div>
+        </div>
+
         <p class="footer">All processing happens locally in your browser. Your files never leave your device.</p>
     </div>
 
     <script>
-        let mergeFiles = [], splitFile = null, mergeFolderHandle = null, splitFolderHandle = null;
+        let mergeFiles = [], splitFile = null, rotateFile = null;
+        let mergeFolderHandle = null, splitFolderHandle = null, rotateFolderHandle = null;
 
         function switchTab(t) {
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
@@ -623,9 +738,12 @@
             if (t === 'merge') {
                 document.querySelectorAll('.tab')[0].classList.add('active');
                 document.getElementById('panel-merge').classList.add('active')
-            } else {
+            } else if (t === 'split') {
                 document.querySelectorAll('.tab')[1].classList.add('active');
                 document.getElementById('panel-split').classList.add('active')
+            } else if (t === 'rotate') {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('panel-rotate').classList.add('active')
             }
         }
 
@@ -639,15 +757,19 @@
                 if (t === 'merge') {
                     mergeFolderHandle = handle;
                     document.getElementById('merge-folder-path').textContent = handle.name
-                } else {
+                } else if (t === 'split') {
                     splitFolderHandle = handle;
                     document.getElementById('split-folder-path').textContent = handle.name
+                } else if (t === 'rotate') {
+                    rotateFolderHandle = handle;
+                    document.getElementById('rotate-folder-path').textContent = handle.name
                 }
             } catch (e) {
                 alert('Unable to access this folder. On Windows, system folders like Desktop, Documents, or Downloads may be restricted. Please try selecting a different folder (e.g., a subfolder within Documents or a custom folder). Files will default to your Downloads folder.');
             }
         }
 
+        // Merge functionality
         const mergeDropZone = document.getElementById('merge-drop-zone'),
             mergeInput = document.getElementById('merge-input');
 
@@ -754,6 +876,7 @@
             }
         }
 
+        // Split functionality
         const splitDropZone = document.getElementById('split-drop-zone'),
             splitInput = document.getElementById('split-input');
 
@@ -907,6 +1030,160 @@
                 showStatus('split-status', 'success', `Split into ${splitFile.pageCount} individual PDF files!`)
             } catch (err) {
                 showStatus('split-status', 'error', `Error splitting: ${err.message}`)
+            }
+        }
+
+        // Rotate functionality
+        const rotateDropZone = document.getElementById('rotate-drop-zone'),
+            rotateInput = document.getElementById('rotate-input');
+
+        rotateDropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            rotateDropZone.classList.add('drag-over')
+        });
+        rotateDropZone.addEventListener('dragleave', () => {
+            rotateDropZone.classList.remove('drag-over')
+        });
+        rotateDropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            rotateDropZone.classList.remove('drag-over');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+            if (files.length > 0) loadRotateFile(files[0])
+        });
+        rotateInput.addEventListener('change', e => {
+            if (e.target.files.length > 0) {
+                loadRotateFile(e.target.files[0])
+            }
+            rotateInput.value = ''
+        });
+
+        function dedupe(arr) {
+            const seen = new Set(), out = [];
+            for (const n of arr) {
+                if (!seen.has(n)) {
+                    seen.add(n);
+                    out.push(n)
+                }
+            }
+            return out
+        }
+
+        async function loadRotateFile(file) {
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+                const count = pdf.getPageCount();
+                rotateFile = { file: file, name: file.name, pageCount: count, arrayBuffer: arrayBuffer, pdf: pdf };
+                document.getElementById('rotate-file-info').style.display = 'block';
+                document.getElementById('rotate-file-name').textContent = file.name;
+                document.getElementById('rotate-page-count').textContent = `${count} page${count > 1 ? 's' : ''}`;
+                document.getElementById('rotate-btn').disabled = false;
+                const base = file.name.replace(/\.pdf$/i, '');
+                document.getElementById('rotate-output-name').value = `${base}_rotated.pdf`;
+                hideStatus('rotate-status');
+                hideWarning();
+            } catch (err) {
+                showStatus('rotate-status', 'error', `Failed to load "${file.name}": ${err.message}`)
+            }
+        }
+
+        function clearRotate() {
+            rotateFile = null;
+            document.getElementById('rotate-file-info').style.display = 'none';
+            document.getElementById('rotate-btn').disabled = true;
+            document.getElementById('rotate-cw').value = '';
+            document.getElementById('rotate-180').value = '';
+            document.getElementById('rotate-ccw').value = '';
+            document.getElementById('rotate-output-name').value = 'rotated.pdf';
+            hideStatus('rotate-status');
+            hideWarning()
+        }
+
+        function hideWarning() {
+            document.getElementById('rotate-warning').classList.remove('show');
+            document.getElementById('rotate-warning-text').textContent = '';
+        }
+
+        async function rotatePDF() {
+            if (!rotateFile) return;
+
+            try {
+                const cwInput = document.getElementById('rotate-cw').value.trim();
+                const halfInput = document.getElementById('rotate-180').value.trim();
+                const ccwInput = document.getElementById('rotate-ccw').value.trim();
+
+                if (!cwInput && !halfInput && !ccwInput) {
+                    showStatus('rotate-status', 'error', 'Please enter at least one page to rotate.');
+                    return;
+                }
+
+                const cwPages = dedupe(cwInput ? parsePageNumbers(cwInput, rotateFile.pageCount) : []);
+                const halfPages = dedupe(halfInput ? parsePageNumbers(halfInput, rotateFile.pageCount) : []);
+                const ccwPages = dedupe(ccwInput ? parsePageNumbers(ccwInput, rotateFile.pageCount) : []);
+
+                // Check for conflicts (pages appearing in multiple inputs)
+                const counts = {};
+                [...cwPages, ...halfPages, ...ccwPages].forEach(p => counts[p] = (counts[p] || 0) + 1);
+                const conflicts = Object.keys(counts).filter(p => counts[p] > 1).map(Number).sort((a, b) => a - b);
+                const conflictSet = new Set(conflicts);
+
+                // Build rotation map, skipping conflicting pages
+                const rotationMap = {};
+                cwPages.forEach(p => { if (!conflictSet.has(p)) rotationMap[p] = 90; });
+                halfPages.forEach(p => { if (!conflictSet.has(p)) rotationMap[p] = 180; });
+                ccwPages.forEach(p => { if (!conflictSet.has(p)) rotationMap[p] = 270; }); // -90 = 270
+
+                const pagesToRotate = Object.keys(rotationMap).map(Number);
+
+                if (pagesToRotate.length === 0) {
+                    let msg = 'No pages to rotate.';
+                    if (conflicts.length) {
+                        msg += ` All specified pages appear in multiple rotation actions (${conflicts.join(', ')}).`;
+                    }
+                    showStatus('rotate-status', 'error', msg);
+                    return;
+                }
+
+                // Show warning if there were conflicts
+                if (conflicts.length) {
+                    document.getElementById('rotate-warning-text').textContent =
+                        `Pages ${conflicts.join(', ')} appear in multiple rotation actions and were ignored.`;
+                    document.getElementById('rotate-warning').classList.add('show');
+                } else {
+                    hideWarning();
+                }
+
+                showStatus('rotate-status', 'success', 'Rotating pages...');
+
+                // Use user's exact approach: reload PDF, accumulate rotations
+                const pdf = await PDFLib.PDFDocument.load(rotateFile.arrayBuffer, { ignoreEncryption: true });
+                const allPages = pdf.getPages();
+
+                pagesToRotate.forEach(pageNum => {
+                    const page = allPages[pageNum - 1];
+                    const current = page.getRotation ? page.getRotation().angle : 0;
+                    const added = rotationMap[pageNum];
+                    const newAngle = ((current + added) % 360 + 360) % 360;
+                    if (PDFLib.degrees) {
+                        page.setRotation(PDFLib.degrees(newAngle));
+                    } else {
+                        page.rotation = newAngle;
+                    }
+                });
+
+                const bytes = await pdf.save();
+                let filename = document.getElementById('rotate-output-name').value.trim() || 'rotated.pdf';
+                if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+                await saveFile(bytes, filename, rotateFolderHandle);
+
+                let msg = `Rotated ${pagesToRotate.length} page${pagesToRotate.length > 1 ? 's' : ''} in "${filename}"!`;
+                if (conflicts.length) {
+                    msg += ` Skipped page${conflicts.length > 1 ? 's' : ''} ${conflicts.join(', ')} (listed in multiple rotation actions).`;
+                }
+                showStatus('rotate-status', 'success', msg);
+
+            } catch (err) {
+                showStatus('rotate-status', 'error', err.message);
             }
         }
 
