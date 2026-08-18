@@ -87,7 +87,7 @@ class Calculator(QWidget):
         top_row.addSpacing(20)
 
         # Cross / quit button
-        self.quit_btn = QPushButton("\u2715")  # X symbol
+        self.quit_btn = QPushButton("\u2716")  # X symbol
         self.quit_btn.setFixedSize(FONT_SIZE + 12, FONT_SIZE + 12)
         self.quit_btn.setStyleSheet(
             f"background-color: black; color: white; " f"border: 1px solid #555; font-size: {FONT_SIZE}px;"
